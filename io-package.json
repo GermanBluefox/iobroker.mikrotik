@@ -1,0 +1,50 @@
+{
+    "common": {
+        "name": "mikrotik",
+        "version": "0.5.0",
+        "news": {
+            "0.5.0": {
+                "en": "beta version",
+                "de": "Betaversion",
+                "ru": "Бета версия",
+                "pt": "Versão beta",
+                "fr": "Version bêta",
+                "nl": "Beta versie"
+            },
+            "0.0.1": {
+                "en": "initial adapter",
+                "de": "Initiale Version",
+                "ru": "Первоначальный адаптер",
+                "pt": "Versão inicial",
+                "fr": "Version initiale",
+                "nl": "Eerste release"
+            }
+        },
+        "title": "Javascript/Node.js based mikrotik adapter",
+        "desc": {
+            "en": "ioBroker mikrotik Adapter",
+            "de": "ioBroker Mikrotik Adapter",
+            "ru": "ioBroker Mikrotik драйвер как образец",
+            "pt": "Modelo de adaptador para o ioBroker",
+            "fr": "ioBroker adaptateur modèle",
+            "nl": "ioBroker Mikrotik Adapter"
+        },
+        "platform": "Javascript/Node.js",
+        "mode": "daemon",
+        "icon": "mikrotik.png",
+        "enabled": true,
+        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.mikrotik/master/admin/mikrotik.png",
+        "keywords": ["mikrotik", "vis", "GUI", "graphical", "scada"],
+        "readme": "https://github.com/ioBroker/ioBroker.mikrotik/blob/master/README.md",
+        "loglevel": "info",
+        "type": "general",
+        "restartAdapters": ["vis"]
+    },
+    "native": {
+        "test1": true,
+        "test2": 42
+    },
+    "objects": [
+
+    ]
+}
