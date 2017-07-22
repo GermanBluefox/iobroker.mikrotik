@@ -1,7 +1,7 @@
 {
   "name": "iobroker.mikrotik",
-  "version": "0.5.0",
-  "description": "ioBroker mikrotik Adapter",
+  "version": "0.0.1",
+  "description": "ioBroker MikroTik Adapter",
   "author": {
     "name": "instalator",
     "email": "vvvalt@mail.ru"
@@ -12,19 +12,18 @@
       "email": "vvvalt@mail.ru"
     }
   ],
-  "homepage": "https://github.com/ioBroker/ioBroker.mikrotik",
+  "homepage": "https://github.com/iobroker/iobroker.mikrotik",
   "license": "MIT",
   "keywords": [
     "ioBroker",
-    "mikrotik",
-    "Smart Home",
-    "home automation"
+    "mikrotik"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/ioBroker/ioBroker.mikrotik"
+    "url": "https://github.com/instalator/iobroker.mikrotik"
   },
   "dependencies": {
+    "mikronode": "^2.0.0"
   },
   "devDependencies": {
       "grunt": "^0.4.5",
@@ -40,7 +39,7 @@
     "test": "node node_modules/mocha/bin/mocha"
   },
   "bugs": {
-    "url": "https://github.com/ioBroker/ioBroker.mikrotik/issues"
+    "url": "https://github.com/instalator/iobroker.mikrotik/issues"
   },
   "readmeFilename": "README.md"
 }

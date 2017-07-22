@@ -1,16 +1,8 @@
 {
     "common": {
         "name": "mikrotik",
-        "version": "0.5.0",
+        "version": "0.0.1",
         "news": {
-            "0.5.0": {
-                "en": "beta version",
-                "de": "Betaversion",
-                "ru": "Бета версия",
-                "pt": "Versão beta",
-                "fr": "Version bêta",
-                "nl": "Beta versie"
-            },
             "0.0.1": {
                 "en": "initial adapter",
                 "de": "Initiale Version",
@@ -20,7 +12,7 @@
                 "nl": "Eerste release"
             }
         },
-        "title": "Javascript/Node.js based mikrotik adapter",
+        "title": "MikroTik Router adapter",
         "desc": {
             "en": "ioBroker mikrotik Adapter",
             "de": "ioBroker Mikrotik Adapter",
@@ -32,12 +24,12 @@
         "platform": "Javascript/Node.js",
         "mode": "daemon",
         "icon": "mikrotik.png",
-        "enabled": true,
-        "extIcon": "https://raw.githubusercontent.com/ioBroker/ioBroker.mikrotik/master/admin/mikrotik.png",
-        "keywords": ["mikrotik", "vis", "GUI", "graphical", "scada"],
-        "readme": "https://github.com/ioBroker/ioBroker.mikrotik/blob/master/README.md",
+        "enabled": false,
+        "extIcon": "https://raw.githubusercontent.com/instalator/iobroker.mikrotik/master/admin/mikrotik.png",
+        "keywords": ["mikrotik"],
+        "readme": "https://github.com/instalator/iobroker.mikrotik/blob/master/README.md",
         "loglevel": "info",
-        "type": "general",
+        "type": "hardware",
         "restartAdapters": ["vis"]
     },
     "native": {
