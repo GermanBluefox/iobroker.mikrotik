@@ -23,7 +23,7 @@
     "url": "https://github.com/instalator/iobroker.mikrotik"
   },
   "dependencies": {
-    "mikronode": "^2.0.0"
+    "mikronode-ng": "*"
   },
   "devDependencies": {
       "grunt": "^0.4.5",

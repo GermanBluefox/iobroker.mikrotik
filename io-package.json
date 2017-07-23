@@ -38,5 +38,35 @@
     },
     "objects": [
 
+    ],
+    "instanceObjects": [
+        {
+            "_id": "info.connection",
+            "type": "state",
+            "common": {
+                "role": "indicator.connected",
+                "name": "If connected to MikroTik",
+                "type": "boolean",
+                "read": true,
+                "write": false,
+                "def": false
+            },
+            "native": {
+            }
+        },
+        {
+            "_id": "reboot",
+            "type": "state",
+            "common": {
+                "role": "button.reboot",
+                "name": "Reboot router",
+                "type": "boolean",
+                "read": false,
+                "write": true,
+                "def": false
+            },
+            "native": {
+            }
+        }
     ]
 }

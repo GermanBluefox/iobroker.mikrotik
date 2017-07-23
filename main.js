@@ -2,9 +2,12 @@
 
 var utils =    require(__dirname + '/lib/utils');
 var adapter = utils.adapter('mikrotik');
-var MikroNode = require('mikronode');
 
-var device = new MikroNode('192.168.88.1');
+var MikroNode = require('mikronode-ng');
+
+var states = {}, old_states ={};
+var connect = false;
+var _poll, poll_time = 5000;
 
 adapter.on('unload', function (callback) {
     try {
@@ -45,37 +48,139 @@ adapter.on('ready', function () {
 function main() {
     //adapter.subscribeStates('*');
 
-    device.connect('admin','password').then(function(conn) {
+    var connection = MikroNode.getConnection('192.168.88.1','admin','', {
+        port: 8728,
+        timeout: 10,
+        closeOnTimeout: false,
+        closeOnDone : false
+    });
 
-        var chan = conn.openChannel("addresses"); // open a named channel
-        var chan2 = conn.openChannel("firewall_connections",true); // open a named channel, turn on "closeOnDone"
 
-        chan.write('/ip/address/print');
+    connection.getConnectPromise().then(function(conn) {
+        adapter.log.info('MikroTik ' + conn.status + ' to: ' + conn.host + JSON.stringify(conn));
+        adapter.setState('info.connection', true, true);
+        connect = true;
+        getSystemInfo(conn);
+    });
 
-        chan.on('done',function(data) {
+}
 
-            // data is all of the sentences in an array.
-            data.forEach(function(item) {
-                console.log('Interface/IP: '+item.data.interface+"/"+item.data.address);
-            });
+function getSystemInfo(conn){
+    conn.getCommandPromise('/system/resource/print').then(function resolved(values) {
+        console.log('Addreses: ' + JSON.stringify(values));
+        states.interface = values;
+        poll(conn);
+    }, function rejected(reason) {
+        console.log('Oops: ' + JSON.stringify(reason));
+    });
+}
 
-            //chan.close(); // close the channel.
-            //conn.close(); // when closing connection, the socket is closed and program ends.
-
+function poll(conn){
+    clearInterval(_poll);
+    _poll = setInterval(function() {
+        var ch1 = conn.getCommandPromise('/interface/wireless/registration-table/print');
+        var ch2 = conn.getCommandPromise('/ip/dhcp-server/lease/print');
+        var ch3 = conn.getCommandPromise('/interface/print');
+        var ch4 = conn.getCommandPromise('/ip/firewall/filter/print');
+        var ch5 = conn.getCommandPromise('/ip/firewall/nat/print');
+        Promise.all([ ch1, ch2, ch3, ch4, ch5 ]).then(function resolved(values) {
+            adapter.log.info('interface/wireless/registration-table ' + JSON.stringify(values[0]) + '\n\n');
+            adapter.log.info('ip/dhcp-server/lease ' + JSON.stringify(values[1]) + '\n\n');
+            adapter.log.info('interface ' + JSON.stringify(values[2]) + '\n\n');
+            adapter.log.info('ip/firewall/filter ' + JSON.stringify(values[3]) + '\n\n');
+            adapter.log.info('ip/firewall/nat ' + JSON.stringify(values[4]) + '\n\n');
+            states.wireless = values[0];
+            states.dhcp = values[1];
+            states.interface = values[2];
+            states.filter = values[3];
+            states.nat = values[4];
+        }, function rejected(reason) {
+            err(reason);
         });
 
+    }, poll_time);
+}
 
-        chan.write('/ip/firewall/print');
+function err(e){
+    console.log('Oops: ' + e);
+}
 
-        chan.done.subscribe(function(data){
+function Parse(data){
 
-            // data is all of the sentences in an array.
-            data.forEach(function(item) {
-                var data = MikroNode.resultsToObj(item.data); // convert array of field items to object.
-                console.log('Interface/IP: '+data.interface+"/"+data.address);
-            });
+}
 
+/*
+function getWirelessList(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/interface/wireless/registration-table/print').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
         });
+    });
+}
+*/
 
+function SetFirewallFilter(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/ip/firewall/filter/set\n=disabled=no\n=.id=4').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
+        });
+    });
+}
+/*
+function getFirewallFilter(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/ip/firewall/filter/print').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
+        });
+    });
+}
+*/
+/*
+function getFirewallNat(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/ip/firewall/nat/print').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
+        });
+    });
+}
+*/
+/*
+function getDhcpClient(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/ip/dhcp-server/lease/print').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
+        });
+    });
+}
+*/
+
+/*
+function getAllInterface(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/interface/print').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
+        });
+    });
+}
+*/
+function Reboot(){
+    connection.getConnectPromise().then(function(conn) {
+        conn.getCommandPromise('/system/reboot').then(function resolved(values) {
+            console.log('Addreses: ' + JSON.stringify(values));
+        }, function rejected(reason) {
+            console.log('Oops: ' + JSON.stringify(reason));
+        });
     });
 }
